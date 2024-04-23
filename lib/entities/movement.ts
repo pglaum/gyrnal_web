@@ -1,12 +1,11 @@
-import { z, } from "zod"
+import {z, } from "zod"
 
-import { MetadataSchema, } from "@/lib/entities/metadata"
-import { PerformanceSchema, } from "@/lib/entities/performance"
+import {PerformanceSchema, } from "@/lib/entities/performance"
 
 export const MovementSchema = z.object({
     name: z.string().default('new'),
-    metadata: z.array(MetadataSchema).default([]),
-    notes: z.array(z.string()).default([]),
+    metadata: z.object({}).default({}),
+    notes: z.string().default(''),
     performances: z.array(PerformanceSchema).default([]),
     superset: z.boolean().default(false),
 })

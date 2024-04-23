@@ -13,10 +13,9 @@
                 >*</span>
             </slot>
         </Label>
-        <Input
+        <Textarea
             :id="id"
             v-model="inputValue"
-            :type="type"
             :class="{'border-destructive': errorMsg}"
             :aria-describedby="id"
             :placeholder="placeholder"
@@ -51,7 +50,6 @@ const emit = defineEmits<{
 const props = defineProps<{
     modelValue?: string | number | Date,
     label?: string,
-    type?: string,
     errorMsg?: string,
     placeholder?: string,
     name?: string,

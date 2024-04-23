@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@internationalized/date": "^3.5.2",
     "@vueuse/core": "^10.9.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -22,6 +23,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-rfs": "^5.0.0",
     "uuid": "^9.0.1",
+    "v-calendar": "^3.1.2",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
     "zod": "^3.23.3"

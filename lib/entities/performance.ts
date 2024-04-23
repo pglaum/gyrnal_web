@@ -12,7 +12,7 @@ export const PerformanceSchema = z.object({
     load: PerformanceLoadSchema,
     reps: z.number().default(0),
     fails: z.number().default(0),
-    notes: z.array(z.string()),
+    notes: z.string().default(''),
 })
 
 export type Peformance = z.infer<typeof PerformanceSchema>
