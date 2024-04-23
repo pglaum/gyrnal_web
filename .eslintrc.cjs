@@ -89,7 +89,6 @@ module.exports = {
             'error',
             'always',
         ],
-        'object-property-newline': [ 'error', ],
         'semi': [
             'error',
             'never',

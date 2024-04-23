@@ -4,8 +4,6 @@ import { MovementSchema, } from "@/lib/entities/movement"
 
 
 export const WorkoutSchema = z.object({
-    id: z.string().nullable().default(null),
-    userId: z.string().nullable().default(null),
     startedAt: z.date().default(new Date()),
     finishedAt: z.date().default(new Date()),
     movements: z.array(MovementSchema).default([]),

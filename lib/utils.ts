@@ -10,3 +10,7 @@ export const dateToString = (date: Date): string => {
   const localISOTime = (new Date(date.getTime() - offset)).toISOString().slice(0, 16)
   return localISOTime
 }
+
+export const clone = (obj) => {
+  return JSON.parse(JSON.stringify(obj))
+}

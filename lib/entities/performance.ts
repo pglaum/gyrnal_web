@@ -9,7 +9,7 @@ export const PerformanceLoadSchema = z.object({
 export type PeformanceLoad = z.infer<typeof PerformanceLoadSchema>
 
 export const PerformanceSchema = z.object({
-    load: PerformanceLoadSchema,
+    load: PerformanceLoadSchema.default(PerformanceLoadSchema.parse({})),
     reps: z.number().default(0),
     fails: z.number().default(0),
     notes: z.string().default(''),

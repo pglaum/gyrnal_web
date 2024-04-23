@@ -22,8 +22,12 @@ export default defineNuxtConfig({
     modules: [
         '@nuxtjs/supabase',
         '@nuxtjs/tailwindcss',
+        '@pinia/nuxt',
         'shadcn-nuxt',
     ],
+    pinia: {
+        storesDirs: [ './stores/**', ],
+    },
     shadcn: {
         prefix: '',
         componentDir: './components/ui',
