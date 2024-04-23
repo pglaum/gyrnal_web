@@ -14,12 +14,12 @@
                     class="grid gap-4"
                     @submit.prevent="signUp"
                 >
-                    <InputText
+                    <TextInput
                         v-model="email"
                         type="email"
                         label="Email"
                     />
-                    <InputText
+                    <TextInput
                         v-model="password"
                         type="password"
                         label="Password"

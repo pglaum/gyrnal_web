@@ -5,11 +5,20 @@ export default defineNuxtConfig({
             name: 'page',
             mode: 'out-in',
         },
-        components: [
-            '~/components',
-            '~/components/input',
-        ],
     },
+    build: {
+        postcss: {
+            plugins: [
+                require('rfs'),
+            ],
+        },
+    },
+    components: [
+        {
+            path: '~/components',
+            pathPrefix: false,
+        },
+    ],
     modules: [
         '@nuxtjs/supabase',
         '@nuxtjs/tailwindcss',

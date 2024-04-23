@@ -1,7 +1,7 @@
 import { z, } from "zod"
 
+import { MetadataSchema, } from "@/lib/entities/metadata"
 import { PerformanceSchema, } from "@/lib/entities/performance"
-import { MetadataSchema, } from "@/lib/entities/workout"
 
 export const MovementSchema = z.object({
     name: z.string().default('new'),
