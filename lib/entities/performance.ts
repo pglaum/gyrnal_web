@@ -1,8 +1,8 @@
-import {z, } from "zod"
+import { z, } from "zod"
 
 export const PerformanceLoadSchema = z.object({
     weight: z.number().default(0),
-    unit: z.string().default(''),
+    unit: z.string().default('lbs'),
     bodyweight: z.boolean().default(false),
 })
 

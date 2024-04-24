@@ -51,7 +51,7 @@
                 />
             </div>
 
-            <div>
+            <div class="flex flex-wrap justify-between gap-4">
                 <Button
                     variant="outline"
                     size="sm"
@@ -60,6 +60,11 @@
                     <Plus class="size-4" />
                     Add performance
                 </Button>
+                <CheckInput
+                    v-model="mvmnt.superset"
+                    label="Superset"
+                    as-switch
+                />
             </div>
         </CardContent>
     </Card>
@@ -68,17 +73,28 @@
 <script setup lang="ts">
 import { Pencil, Plus, Quote, Trash2, } from 'lucide-vue-next'
 
-import type { Movement, } from '~/lib/entities/movement'
+import { type Movement, MovementSchema,  } from '~/lib/entities/movement'
 
 const emit = defineEmits<{
     (e: 'tryRemove', payload: {index: number}): void
     (e: 'addPerformance', payload: {index: number}): void
     (e: 'removePerformance', payload: {index: number, pindex: number}): void
+    (e: 'update:modelValue', payload: Movement): void
 }>()
-defineProps<{
+const props = defineProps<{
     movement: Movement
     index: number
 }>()
+const { movement, } = toRefs(props)
 
 const dialogStore = useDialogStore()
+
+const mvmnt = computed({
+    get (){
+        return movement.value ?? MovementSchema.parse({})
+    },
+    set (newValue: Movement){
+        emit('update:modelValue', newValue)
+    },
+})
 </script>

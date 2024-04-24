@@ -77,6 +77,34 @@
         </div>
 
         <pre class="whitespace-pre-wrap">{{ modelValue }}</pre>
+
+        <div
+            v-if="showTimer"
+            class="fixed
+                bottom-0
+                left-1/2
+                inline-flex
+                -translate-x-1/2
+                items-center
+                gap-2
+                rounded
+                border-x
+                border-t
+                px-2
+                py-1
+                font-mono
+                backdrop-blur-md"
+        >
+            Break:
+            {{ breakTime }}
+            <Button
+                size="sm"
+                variant="ghost"
+                @click="showTimer = false"
+            >
+                <X class="size-4" />
+            </Button>
+        </div>
     </div>
 
     <AddMovementDialog
@@ -108,7 +136,8 @@
 </template>
 
 <script setup lang="ts">
-import { Loader2, Plus, Save, } from 'lucide-vue-next'
+import { useNow, } from '@vueuse/core'
+import { Loader2, Plus, Save, X, } from 'lucide-vue-next'
 
 import EditMovementNotesDialog from '@/components/dialog/EditMovementNotesDialog.vue'
 import EditPerformanceNotesDialog from '@/components/dialog/EditPerformanceNotesDialog.vue'
@@ -132,9 +161,12 @@ const { modelValue, gyrnalWorkout, } = toRefs(props)
 const router = useRouter()
 const user = useSupabaseUser()
 const { toast, } = useToast()
+const now = useNow()
 
 const allowLeave = ref(false)
 const loading = ref(false)
+const showTimer = ref(true)
+const lastPerformance = ref(new Date())
 
 const dialogStore = useDialogStore()
 const addMovementDialogVisible = dialogStore.isVisibleComputed('add-movement')
@@ -178,6 +210,13 @@ const notes = computed({
     },
 })
 
+const breakTime = computed(() => {
+    const ms = now.value.getTime() - lastPerformance.value.getTime()
+    const seconds = Math.floor((ms / 1000) % 60)
+    const minutes = Math.floor(ms / (1000 * 60))
+    return `${minutes.toString()}:${seconds.toString().padStart(2, '0')}`
+})
+
 const addMovement = (name: string) => {
     workout.value.movements.push(MovementSchema.parse({ name, }))
 }
@@ -200,6 +239,8 @@ const editMovementNotes = ({ notes, index, }:{notes: string, index: number, }) =
 
 const addPerformance = ({ index, }: {index: number}) => {
     workout.value.movements[index].performances.push(PerformanceSchema.parse({}))
+    showTimer.value = true
+    lastPerformance.value = new Date()
 }
 const removePerformance = ({ index, pindex, }: {index: number, pindex: number}) => {
     workout.value.movements[index].performances.splice(pindex, 1)

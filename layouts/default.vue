@@ -3,8 +3,15 @@
         <div class="container sticky top-0 flex justify-between py-4 backdrop-blur-md">
             <NuxtLink
                 to="/"
-                class="font-mono font-medium uppercase text-muted-foreground"
+                class="inline-flex
+                    items-center
+                    gap-2
+                    font-mono
+                    font-medium
+                    uppercase
+                    text-muted-foreground"
             >
+                <NotepadText class="size-4" />
                 Gyrnal
             </NuxtLink>
             <div class="flex gap-4">
@@ -22,6 +29,8 @@
 </template>
 
 <script setup lang="ts">
+import { NotepadText, } from 'lucide-vue-next'
+
 import { toast, } from '~/components/ui/toast'
 
 const router = useRouter()

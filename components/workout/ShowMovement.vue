@@ -1,10 +1,18 @@
 <template>
     <Card>
         <CardHeader>
-            <CardTitle>
+            <CardTitle class="flex gap-4">
                 <Large>
                     {{ movement.name }}
                 </Large>
+                <Badge
+                    v-if="movement.superset"
+                    class="text-xs"
+                    variant="secondary"
+                >
+                    <Sparkles class="size-4" />
+                    Superset
+                </Badge>
             </CardTitle>
             <CardDescription v-if="movement.notes">
                 <Blockquote class="whitespace-pre-wrap">
@@ -42,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { Weight, } from 'lucide-vue-next'
+import { Sparkles, Weight, } from 'lucide-vue-next'
 
 import type { Movement, } from '~/lib/entities/movement'
 

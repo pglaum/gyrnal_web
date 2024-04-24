@@ -99,7 +99,10 @@ onMounted(() => {
     open.value = true
 
     setTimeout(() => {
-        const input = dialog.value?.querySelector('input:first-of-type') as HTMLInputElement | null
+        let input = dialog.value?.querySelector('input:first-of-type')
+        if (input == null) {
+            input = dialog.value?.querySelector('textarea:first-of-type')
+        }
         if (input != null) {
             input.focus()
         }
