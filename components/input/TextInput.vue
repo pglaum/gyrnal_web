@@ -17,7 +17,10 @@
             :id="id"
             v-model="inputValue"
             :type="type"
-            :class="{'border-destructive': errorMsg}"
+            :class="{
+                'grow': true,
+                'border-destructive': errorMsg
+            }"
             :aria-describedby="id"
             :placeholder="placeholder"
             :name="name ? name : undefined"

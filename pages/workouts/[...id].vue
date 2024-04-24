@@ -50,11 +50,13 @@
                 </Blockquote>
             </div>
 
-            <ShowMovement
-                v-for="movement, index in workout.data.movements"
-                :key="index"
-                :movement="movement"
-            />
+            <div class="grid gap-4">
+                <ShowMovement
+                    v-for="movement, index in workout.data.movements"
+                    :key="index"
+                    :movement="movement"
+                />
+            </div>
         </template>
 
         <DeleteWorkoutDialog

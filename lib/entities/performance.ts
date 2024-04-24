@@ -1,4 +1,4 @@
-import { z, } from "zod"
+import {z, } from "zod"
 
 export const PerformanceLoadSchema = z.object({
     weight: z.number().default(0),
@@ -6,7 +6,7 @@ export const PerformanceLoadSchema = z.object({
     bodyweight: z.boolean().default(false),
 })
 
-export type PeformanceLoad = z.infer<typeof PerformanceLoadSchema>
+export type PerformanceLoad = z.infer<typeof PerformanceLoadSchema>
 
 export const PerformanceSchema = z.object({
     load: PerformanceLoadSchema.default(PerformanceLoadSchema.parse({})),
@@ -15,4 +15,4 @@ export const PerformanceSchema = z.object({
     notes: z.string().default(''),
 })
 
-export type Peformance = z.infer<typeof PerformanceSchema>
+export type Performance = z.infer<typeof PerformanceSchema>

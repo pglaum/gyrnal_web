@@ -57,89 +57,15 @@
             <H3>Movements</H3>
 
             <div class="grid gap-4">
-                <Card
+                <EditMovement
                     v-for="movement, index in workout.movements"
                     :key="index"
-                >
-                    <CardHeader>
-                        <CardTitle class="flex flex-wrap justify-between">
-                            <Large>{{ movement.name }}</Large>
-                            <div class="flex gap-2">
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    @click="dialogStore.showDialog('edit-movement', {index, name: movement.name}, editMovement)"
-                                >
-                                    <Pencil class="size-4" />
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    @click="tryRemoveMovement(index)"
-                                >
-                                    <Trash2 class="size-4" />
-                                </Button>
-                            </div>
-                        </CardTitle>
-                    </CardHeader>
-
-                    <CardContent class="grid gap-4">
-                        <div
-                            v-if="movement.performances && movement.performances.length > 0"
-                            class="grid gap-4"
-                        >
-                            <div
-                                v-for="performance, pindex in movement.performances"
-                                :key="pindex"
-                                class="flex items-end gap-2"
-                            >
-                                <TextInput
-                                    v-model="performance.load.weight"
-                                    type="number"
-                                    label="Weight"
-                                    select-on-focus
-                                />
-                                <TextInput
-                                    v-model="performance.load.unit"
-                                    type="string"
-                                    label="Unit"
-                                    select-on-focus
-                                />
-                                <TextInput
-                                    v-model="performance.reps"
-                                    type="number"
-                                    label="Reps"
-                                    select-on-focus
-                                />
-                                <TextInput
-                                    v-model="performance.fails"
-                                    type="number"
-                                    label="Fails"
-                                    select-on-focus
-                                />
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    class="shrink-0"
-                                    @click="removePerformance(index, pindex)"
-                                >
-                                    <Trash2 class="size-4" />
-                                </Button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                @click="addPerformance(index)"
-                            >
-                                <Plus class="size-4" />
-                                Add performance
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
+                    :movement="movement"
+                    :index="index"
+                    @add-performance="addPerformance"
+                    @remove-performance="removePerformance"
+                    @try-remove="tryRemoveMovement"
+                />
             </div>
 
             <div>
@@ -150,7 +76,7 @@
             </div>
         </div>
 
-        <pre>{{ modelValue }}</pre>
+        <pre class="whitespace-pre-wrap">{{ modelValue }}</pre>
     </div>
 
     <AddMovementDialog
@@ -161,9 +87,18 @@
         v-if="editMovementDialogVisible"
         @edit="editMovement"
     />
+    <EditMovementNotesDialog
+        v-if="editMovementNotesDialogVisible"
+        @edit="editMovementNotes"
+    />
     <DeleteMovementDialog
         v-if="deleteMovementDialogVisible"
         @delete="removeMovement"
+    />
+
+    <EditPerformanceNotesDialog
+        v-if="editPerformanceNotesDialogVisible"
+        @edit="editPerformanceNotes"
     />
 
     <ReallyLeaveDialog
@@ -173,10 +108,12 @@
 </template>
 
 <script setup lang="ts">
-import { Loader2,
-         Pencil, Plus, Save, Trash2, } from 'lucide-vue-next'
+import { Loader2, Plus, Save, } from 'lucide-vue-next'
 
+import EditMovementNotesDialog from '@/components/dialog/EditMovementNotesDialog.vue'
+import EditPerformanceNotesDialog from '@/components/dialog/EditPerformanceNotesDialog.vue'
 import { useToast, } from '@/components/ui/toast'
+import EditMovement from '@/components/workout/EditMovement.vue'
 import { insertWorkout, updateWorkout, } from '~/lib/api/workout'
 import { type GyrnalWorkout, GyrnalWorkoutSchema, } from '~/lib/entities/gyrnal_workout'
 import { MovementSchema, } from '~/lib/entities/movement'
@@ -202,7 +139,9 @@ const loading = ref(false)
 const dialogStore = useDialogStore()
 const addMovementDialogVisible = dialogStore.isVisibleComputed('add-movement')
 const editMovementDialogVisible = dialogStore.isVisibleComputed('edit-movement')
+const editMovementNotesDialogVisible = dialogStore.isVisibleComputed('edit-movement-notes')
 const deleteMovementDialogVisible = dialogStore.isVisibleComputed('delete-movement')
+const editPerformanceNotesDialogVisible = dialogStore.isVisibleComputed('edit-performance-notes')
 const reallyLeaveDialogVisible = dialogStore.isVisibleComputed('really-leave')
 
 const workout = computed({
@@ -242,7 +181,7 @@ const notes = computed({
 const addMovement = (name: string) => {
     workout.value.movements.push(MovementSchema.parse({ name, }))
 }
-const tryRemoveMovement = (index: number) => {
+const tryRemoveMovement = ({ index, }: {index: number}) => {
     if (workout.value.movements[index].performances && workout.value.movements[index].performances.length > 0) {
         dialogStore.showDialog('delete-movement', index)
     } else {
@@ -255,12 +194,18 @@ const removeMovement = (index: number) => {
 const editMovement = ({ index, name, }: {index: number, name: string}) => {
     workout.value.movements[index].name = name
 }
+const editMovementNotes = ({ notes, index, }:{notes: string, index: number, }) => {
+    workout.value.movements[index].notes = notes.trim()
+}
 
-const addPerformance = (index: number) => {
+const addPerformance = ({ index, }: {index: number}) => {
     workout.value.movements[index].performances.push(PerformanceSchema.parse({}))
 }
-const removePerformance = (index: number, pindex: number) => {
+const removePerformance = ({ index, pindex, }: {index: number, pindex: number}) => {
     workout.value.movements[index].performances.splice(pindex, 1)
+}
+const editPerformanceNotes = ({ notes, index, pindex, }:{notes: string, index: number, pindex: number}) => {
+    workout.value.movements[index].performances[pindex].notes = notes.trim()
 }
 
 const save = async () => {
