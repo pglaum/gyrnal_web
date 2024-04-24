@@ -271,6 +271,7 @@ const save = async () => {
             allowLeave.value = true
             await updateWorkout(gyrnalWorkout.value)
         } else {
+            workout.value.finishedAt = new Date()
             const uploadData = GyrnalWorkoutSchema.parse({
                 userid: user.value?.id,
                 data: workout.value,

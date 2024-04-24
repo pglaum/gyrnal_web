@@ -8,6 +8,19 @@
             </CardHeader>
             <CardContent>
                 <div class="grid gap-4">
+                    <div
+                        v-if="workout.data.metadata?.workoutType"
+                        class="flex items-center justify-start gap-2"
+                    >
+                        <Badge
+                            v-if="workout.data.metadata.workoutType"
+                            class="py-1"
+                        >
+                            <Dumbbell class="size-4" />
+                            {{ workout.data.metadata.workoutType }}
+                        </Badge>
+                    </div>
+
                     <div class="flex items-end justify-end gap-2">
                         <Button as-child>
                             <NuxtLink
@@ -27,7 +40,7 @@
 
 <script setup lang="ts">
 import { formatDate, } from '@vueuse/core'
-import { ArrowRight, } from 'lucide-vue-next'
+import { ArrowRight, Dumbbell, } from 'lucide-vue-next'
 
 import { type GyrnalWorkout, } from '~/lib/entities/gyrnal_workout'
 

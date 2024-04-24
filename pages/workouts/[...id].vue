@@ -31,40 +31,30 @@
                 </div>
             </div>
 
-            <Blockquote v-if="workout.data.notes">
-                {{ workout.data.notes }}
-            </Blockquote>
+            <div
+                v-if="workout.data.metadata"
+                class="flex gap-2"
+            >
+                <Badge
+                    v-if="workout.data.metadata.workoutType"
+                    class="py-1"
+                >
+                    <Dumbbell class="size-4" />
+                    {{ workout.data.metadata.workoutType }}
+                </Badge>
+            </div>
 
-            <Card
+            <div v-if="workout.data.notes">
+                <Blockquote>
+                    {{ workout.data.notes }}
+                </Blockquote>
+            </div>
+
+            <ShowMovement
                 v-for="movement, index in workout.data.movements"
                 :key="index"
-            >
-                <CardHeader>
-                    <CardTitle>
-                        {{ movement.name }}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div class="grid gap-4">
-                        <div
-                            v-for="performance, pindex in movement.performances"
-                            :key="pindex"
-                            class="flex items-center gap-4"
-                        >
-                            <Large>
-                                {{ performance.load.weight }}
-                                {{ performance.load.unit }}
-                            </Large>
-                            <div>
-                                {{ performance.reps }} reps
-                            </div>
-                            <div v-if="performance.fails">
-                                {{ performance.fails }} fails
-                            </div>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
+                :movement="movement"
+            />
         </template>
 
         <DeleteWorkoutDialog
@@ -76,8 +66,9 @@
 
 <script setup lang="ts">
 import { formatDate, } from '@vueuse/core'
-import { Pencil, Trash2, } from 'lucide-vue-next'
+import { Dumbbell, Pencil, Trash2, } from 'lucide-vue-next'
 
+import { Badge, } from '~/components/ui/badge'
 import { deleteWorkout, getWorkout, } from '~/lib/api/workout'
 
 const route = useRoute()
