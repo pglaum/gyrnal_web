@@ -1,4 +1,4 @@
-import type { GyrnalWorkout, } from "@/lib/entities/gyrnal_workout"
+import { type GyrnalWorkout, GyrnalWorkoutSchema, } from "@/lib/entities/gyrnal_workout"
 import { useToast, } from "~/components/ui/toast"
 
 export const insertWorkout = async (gyrnalWorkout: GyrnalWorkout) => {
@@ -28,4 +28,41 @@ export const insertWorkout = async (gyrnalWorkout: GyrnalWorkout) => {
     }
 
     return { data, error, }
+}
+
+export const getWorkout = async (id: string) => {
+    const supabase = useSupabaseClient()
+    const { toast, } = useToast()
+
+    const { data, error, } = await supabase.from('gyrnal_workout').select().eq('id', id).single()
+
+    if (error) {
+        toast({
+            title: `Error fetching workout [${id}]`,
+            description: error.message,
+            variant: 'destructive',
+        })
+        return null
+    } else {
+        return GyrnalWorkoutSchema.parse(data)
+    }
+}
+
+export const getWorkouts = async () => {
+    const supabase = useSupabaseClient()
+    const user = useSupabaseUser()
+    const { toast, } = useToast()
+
+    const { data, error, } = await supabase.from('gyrnal_workout').select().eq('userid', user.value.id)
+
+    if (error) {
+        toast({
+            title: 'Error fetching workouts',
+            description: error.message,
+            variant: 'destructive',
+        })
+        return []
+    } else {
+        return data.map((value) => GyrnalWorkoutSchema.parse(value))
+    }
 }

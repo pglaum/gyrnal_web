@@ -259,6 +259,7 @@ const save = async () => {
                 userid: user.value?.id,
                 data: workout.value,
             })
+            allowLeave.value = true
             await insertWorkout(uploadData)
         }
     } catch(e) {
