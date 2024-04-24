@@ -1,8 +1,8 @@
 <template>
     <div class="grid gap-4">
-        <div class="flex justify-between border-b">
-            <H2>
-                New Workout
+        <div class="flex items-center justify-between border-b">
+            <H2 class="pt-2">
+                {{ gyrnalWorkout && gyrnalWorkout.id ? 'Edit Workout' : 'New Workout' }}
             </H2>
             <Button
                 variant="default"
@@ -44,7 +44,7 @@
                 description="Will be automatically updated on create."
             />
             <TextAreaInput
-                v-model="workout.notes"
+                v-model="notes"
                 label="Notes"
                 class="md:col-span-2"
             />
@@ -177,7 +177,7 @@ import { Loader2,
          Pencil, Plus, Save, Trash2, } from 'lucide-vue-next'
 
 import { useToast, } from '@/components/ui/toast'
-import { insertWorkout, } from '~/lib/api/workout'
+import { insertWorkout, updateWorkout, } from '~/lib/api/workout'
 import { type GyrnalWorkout, GyrnalWorkoutSchema, } from '~/lib/entities/gyrnal_workout'
 import { MovementSchema, } from '~/lib/entities/movement'
 import { PerformanceSchema, } from '~/lib/entities/performance'
@@ -214,15 +214,29 @@ const workout = computed({
     },
 })
 
-const workoutType = ref('')
-watch(workoutType, () => {
-    if (!workoutType.value) {
-        if (workout.value.metadata.workoutType) {
-            delete workout.value.metadata.workoutType
+const workoutType = computed({
+    get () {
+        return workout.value?.metadata?.workoutType ?? ''
+    },
+    set (newValue: string) {
+        if (!newValue) {
+            if (workout.value.metadata.workoutType) {
+                delete workout.value.metadata.workoutType
+            }
+        } else {
+            workout.value.metadata.workoutType = newValue
         }
-    } else {
-        workout.value.metadata.workoutType = workoutType.value
-    }
+
+    },
+})
+
+const notes = computed({
+    get () {
+        return workout.value?.notes ?? ''
+    },
+    set (newValue: string) {
+        workout.value.notes = newValue
+    },
 })
 
 const addMovement = (name: string) => {
@@ -250,10 +264,12 @@ const removePerformance = (index: number, pindex: number) => {
 }
 
 const save = async () => {
-    loading.value = false
+    loading.value = true
     try {
         if (gyrnalWorkout.value && gyrnalWorkout.value.id) {
-        // update
+            gyrnalWorkout.value.data = workout.value
+            allowLeave.value = true
+            await updateWorkout(gyrnalWorkout.value)
         } else {
             const uploadData = GyrnalWorkoutSchema.parse({
                 userid: user.value?.id,
@@ -270,7 +286,7 @@ const save = async () => {
             variant: 'destructive',
         })
     } finally {
-        loading.value = true
+        loading.value = false
     }
 }
 
@@ -282,7 +298,6 @@ const leaveRoute = ({ answer, path, }: {answer: boolean, path: string }) => {
 }
 
 onBeforeRouteLeave((e) => {
-    console.log(e)
     if (!allowLeave.value) {
         dialogStore.showDialog('really-leave', e.fullPath)
         return false

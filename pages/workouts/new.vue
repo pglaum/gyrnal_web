@@ -7,5 +7,9 @@
 <script setup lang="ts">
 import { WorkoutSchema, } from '~/lib/entities/workout'
 
-const workout = ref(WorkoutSchema.parse({}))
+const workout = ref()
+
+onMounted(() => {
+    workout.value = WorkoutSchema.parse({})
+})
 </script>

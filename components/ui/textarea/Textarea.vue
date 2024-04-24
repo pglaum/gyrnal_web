@@ -24,6 +24,10 @@ const { textarea, input, } = useTextareaAutosize({})
 watch(input, () => {
     modelValue.value = input.value
 })
+
+onMounted(() => {
+    input.value = modelValue.value
+})
 </script>
 
 <template>

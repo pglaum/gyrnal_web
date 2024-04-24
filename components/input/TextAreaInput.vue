@@ -39,7 +39,6 @@
 <script setup lang="ts">
 import InputDescription from '@/components/ui/input/InputDescription.vue'
 import InputError from '@/components/ui/input/InputError.vue'
-import { dateToString, } from '~/lib/utils'
 
 const id = useId()
 
@@ -48,7 +47,7 @@ const emit = defineEmits<{
     (e: 'blur', payload: Event): void
 }>()
 const props = defineProps<{
-    modelValue?: string | number | Date,
+    modelValue?: string | number,
     label?: string,
     errorMsg?: string,
     placeholder?: string,
@@ -61,9 +60,6 @@ const { modelValue, } = toRefs(props)
 
 const inputValue = computed({
     get () {
-        if (modelValue.value instanceof Date) {
-            return dateToString(modelValue.value)
-        }
         return modelValue.value ?? ''
     },
     set (newValue: string | number) {

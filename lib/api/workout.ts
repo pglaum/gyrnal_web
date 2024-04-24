@@ -30,6 +30,35 @@ export const insertWorkout = async (gyrnalWorkout: GyrnalWorkout) => {
     return { data, error, }
 }
 
+export const updateWorkout = async (gyrnalWorkout: GyrnalWorkout) => {
+    const router = useRouter()
+    const supabase = useSupabaseClient()
+    const { toast, } = useToast()
+
+    const { data, error, } = await supabase.from('gyrnal_workout').upsert(gyrnalWorkout).select().single()
+
+    if (error) {
+        toast({
+            title: 'Error saving workout',
+            description: error.message,
+            variant: 'destructive',
+        })
+    } else {
+        toast({
+            title: 'Workout saved',
+            variant: 'success',
+        })
+
+        if (data && data.id) {
+            router.push(`/workouts/${data.id}`)
+        } else {
+            router.push('/')
+        }
+    }
+
+    return { data, error, }
+}
+
 export const getWorkout = async (id: string) => {
     const supabase = useSupabaseClient()
     const { toast, } = useToast()
@@ -64,5 +93,23 @@ export const getWorkouts = async () => {
         return []
     } else {
         return data.map((value) => GyrnalWorkoutSchema.parse(value))
+    }
+}
+
+export const deleteWorkout = async (id: string) => {
+    const router = useRouter()
+    const supabase = useSupabaseClient()
+    const { toast, } = useToast()
+
+    const { error, } = await supabase.from('gyrnal_workout').delete().eq('id', id)
+
+    if (error) {
+        toast({
+            title: `Error deleting workout [${id}]`,
+            description: error.message,
+            variant: 'destructive',
+        })
+    } else {
+        router.push('/')
     }
 }
