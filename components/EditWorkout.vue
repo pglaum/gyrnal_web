@@ -76,7 +76,7 @@
             </div>
         </div>
 
-        <pre class="whitespace-pre-wrap">{{ modelValue }}</pre>
+        <div class="min-h-[30vh]" />
 
         <div
             v-if="showTimer"
@@ -136,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { useNow, } from '@vueuse/core'
+import { useNow, watchDeep, } from '@vueuse/core'
 import { Loader2, Plus, Save, X, } from 'lucide-vue-next'
 
 import EditMovementNotesDialog from '@/components/dialog/EditMovementNotesDialog.vue'
@@ -165,8 +165,9 @@ const now = useNow()
 
 const allowLeave = ref(false)
 const loading = ref(false)
-const showTimer = ref(true)
+const showTimer = ref(false)
 const lastPerformance = ref(new Date())
+const hasChanges = ref(false)
 
 const dialogStore = useDialogStore()
 const addMovementDialogVisible = dialogStore.isVisibleComputed('add-movement')
@@ -183,6 +184,10 @@ const workout = computed({
     set (newValue: Workout) {
         emit('update:modelValue', newValue)
     },
+})
+
+watchDeep(workout, () => {
+    hasChanges.value = true
 })
 
 const workoutType = computed({
@@ -218,7 +223,7 @@ const breakTime = computed(() => {
 })
 
 const addMovement = (name: string) => {
-    workout.value.movements.push(MovementSchema.parse({ name, }))
+    workout.value.movements.push(MovementSchema.parse({ name: name.trim(), }))
 }
 const tryRemoveMovement = ({ index, }: {index: number}) => {
     if (workout.value.movements[index].performances && workout.value.movements[index].performances.length > 0) {
@@ -231,7 +236,7 @@ const removeMovement = (index: number) => {
     workout.value.movements.splice(index, 1)
 }
 const editMovement = ({ index, name, }: {index: number, name: string}) => {
-    workout.value.movements[index].name = name
+    workout.value.movements[index].name = name.trim()
 }
 const editMovementNotes = ({ notes, index, }:{notes: string, index: number, }) => {
     workout.value.movements[index].notes = notes.trim()
@@ -285,7 +290,7 @@ const leaveRoute = ({ answer, path, }: {answer: boolean, path: string }) => {
 }
 
 onBeforeRouteLeave((e) => {
-    if (!allowLeave.value) {
+    if (!allowLeave.value && hasChanges.value) {
         dialogStore.showDialog('really-leave', e.fullPath)
         return false
     }

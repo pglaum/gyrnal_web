@@ -1,6 +1,14 @@
 <template>
     <div class="grid gap-2">
         <div class="flex items-end gap-2">
+            <Button
+                :variant="perf.load.bodyweight ? 'default' : 'outline'"
+                size="icon"
+                class="shrink-0"
+                @click="perf.load.bodyweight = !perf.load.bodyweight"
+            >
+                <PersonStanding class="size-4" />
+            </Button>
             <TextInput
                 v-model="perf.load.weight"
                 type="number"
@@ -51,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { Quote, Trash2, } from 'lucide-vue-next'
+import { PersonStanding, Quote, Trash2, } from 'lucide-vue-next'
 
 import { type Performance, PerformanceSchema,
 } from '~/lib/entities/performance'

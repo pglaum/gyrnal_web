@@ -27,7 +27,31 @@
                     :key="pindex"
                     class="flex flex-wrap items-center gap-x-4 gap-y-2"
                 >
-                    <div class="inline-flex items-center gap-2 rounded-md bg-muted px-2 py-1">
+                    <div
+                        v-if="performance.load.bodyweight"
+                        class="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-1"
+                    >
+                        <PersonStanding class="size-5" />
+                        <Plus
+                            v-if="performance.load.weight && performance.load.weight > 0"
+                            class="size-4"
+                        />
+                        <Minus
+                            v-if="performance.load.weight && performance.load.weight < 0"
+                            class="size-4"
+                        />
+                        <div
+                            v-if="performance.load.weight"
+                            class="font-semibold"
+                        >
+                            {{ Math.abs(performance.load.weight) }}
+                            {{ performance.load.unit }}
+                        </div>
+                    </div>
+                    <div
+                        v-else
+                        class="inline-flex items-center gap-2 rounded-md bg-muted px-2 py-1"
+                    >
                         <Weight class="size-5" />
                         <div class="font-semibold">
                             {{ performance.load.weight }}
@@ -50,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { Sparkles, Weight, } from 'lucide-vue-next'
+import { Minus, PersonStanding, Plus, Sparkles, Weight, } from 'lucide-vue-next'
 
 import type { Movement, } from '~/lib/entities/movement'
 
