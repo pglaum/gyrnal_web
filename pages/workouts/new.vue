@@ -10,6 +10,6 @@ import { WorkoutSchema, } from '~/lib/entities/workout'
 const workout = ref()
 
 onMounted(() => {
-    workout.value = WorkoutSchema.parse({})
+    workout.value = WorkoutSchema.parse({ startedAt: new Date(), finishedAt: new Date(), })
 })
 </script>

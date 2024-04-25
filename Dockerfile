@@ -1,9 +1,16 @@
-FROM node:20.2-alpine as build-stage
+FROM node:20.9-alpine as build-stage
+
+ARG SUPABASE_URL
+ARG SUPABASE_KEY
+ARG SUPABASE_SERVICE_KEY
 
 RUN apk add --no-cache git
 
 RUN mkdir /nuxt
 WORKDIR /nuxt
+
+RUN echo "SUPABASE_URL=${SUPABASE_URL}" > .env \
+	echo "SUPABASE_KEY=${SUPABASE_KEY}" >> .env
 
 COPY package*.json ./
 COPY yarn.lock ./

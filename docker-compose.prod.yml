@@ -5,13 +5,15 @@ services:
     image: ghcr.io/pglaum/gyrnal_web:main
     build:
       context: ./
-      dockerfile: gyrnal_web.prod.Dockerfile
+      dockerfile: Dockerfile
     restart: unless-stopped
-    env_file:
-      - stack.env
+    environment:
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_KEY: ${SUPABASE_KEY}
+      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
     networks:
       - swarm-proxy
 
 networks:
-  swam-proxy:
+  swarm-proxy:
     external: true
