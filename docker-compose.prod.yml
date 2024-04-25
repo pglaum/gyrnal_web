@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  gyrnal_web:
+    image: ghcr.io/pglaum/gyrnal_web:main
+    build:
+      context: ./
+      dockerfile: gyrnal_web.prod.Dockerfile
+    restart: unless-stopped
+    env_file:
+      - stack.env
+    networks:
+      - swarm-proxy
+
+networks:
+  swam-proxy:
+    external: true
