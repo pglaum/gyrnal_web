@@ -1,8 +1,14 @@
 <template>
-    <Card>
+    <Card class="relative">
         <CardHeader>
             <CardTitle class="flex flex-wrap justify-between">
                 <div class="flex items-center gap-2">
+                    <div
+                        class="handle cursor-move rounded p-2 hover:bg-muted"
+                        title="Drag & drop movements"
+                    >
+                        <GripVertical class="size-4" />
+                    </div>
                     <Large>{{ movement.name }}</Large>
                     <Button
                         variant="ghost"
@@ -71,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { Pencil, Plus, Quote, Trash2, } from 'lucide-vue-next'
+import { GripVertical, Pencil, Plus, Quote, Trash2, } from 'lucide-vue-next'
 
 import { type Movement, MovementSchema,  } from '~/lib/entities/movement'
 

@@ -146,6 +146,7 @@ module.exports = {
                 whitelist: [
                     'drag(.*_?)',
                     'calendar',
+                    'handle',
                 ],
             },
         ],

@@ -44,7 +44,7 @@
                 description="Will be automatically updated on create."
             />
             <TextAreaInput
-                v-model="notes"
+                v-model="workout.notes"
                 label="Notes"
                 class="md:col-span-2"
             />
@@ -56,22 +56,43 @@
         >
             <H3>Movements</H3>
 
-            <div class="grid gap-4">
+            <draggable
+                :animation="200"
+                :component-data="{
+                    type: 'transition-group',
+                    name: !dragging ? 'flip-list' : null,
+                }"
+                group="movements"
+                ghost-class="bg-muted"
+                handle=".handle"
+                tag="transition-group"
+                :list="workout.movements"
+                @start="dragging = true"
+                @end="dragging = false"
+            >
                 <EditMovement
                     v-for="movement, index in workout.movements"
                     :key="index"
+                    class="my-4"
                     :movement="movement"
                     :index="index"
                     @add-performance="addPerformance"
                     @remove-performance="removePerformance"
                     @try-remove="tryRemoveMovement"
                 />
-            </div>
+            </draggable>
 
-            <div>
+            <div class="flex gap-4">
                 <Button @click="dialogStore.showDialog('add-movement')">
                     <Plus class="size-4" />
                     Add Movement
+                </Button>
+                <Button
+                    variant="outline"
+                    @click="console.log(workout)"
+                >
+                    <Terminal class="size-4" />
+                    console.log
                 </Button>
             </div>
         </div>
@@ -137,7 +158,7 @@
 
 <script setup lang="ts">
 import { useNow, watchDeep, } from '@vueuse/core'
-import { Loader2, Plus, Save, X, } from 'lucide-vue-next'
+import { Loader2, Plus, Save, Terminal, X, } from 'lucide-vue-next'
 
 import EditMovementNotesDialog from '@/components/dialog/EditMovementNotesDialog.vue'
 import EditPerformanceNotesDialog from '@/components/dialog/EditPerformanceNotesDialog.vue'
@@ -164,10 +185,11 @@ const { toast, } = useToast()
 const now = useNow()
 
 const allowLeave = ref(false)
+const dragging = ref(false)
+const hasChanges = ref(false)
+const lastPerformance = ref(new Date())
 const loading = ref(false)
 const showTimer = ref(false)
-const lastPerformance = ref(new Date())
-const hasChanges = ref(false)
 
 const dialogStore = useDialogStore()
 const addMovementDialogVisible = dialogStore.isVisibleComputed('add-movement')
@@ -203,15 +225,6 @@ const workoutType = computed({
             workout.value.metadata.workoutType = newValue
         }
 
-    },
-})
-
-const notes = computed({
-    get () {
-        return workout.value?.notes ?? ''
-    },
-    set (newValue: string) {
-        workout.value.notes = newValue
     },
 })
 
