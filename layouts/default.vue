@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-screen">
-        <div class="container sticky top-0 flex justify-between py-4 backdrop-blur-md">
+        <div class="container sticky top-0 z-10 flex justify-between py-4 backdrop-blur-md">
             <NuxtLink
                 to="/"
                 class="inline-flex

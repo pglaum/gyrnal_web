@@ -3,7 +3,7 @@
         <template v-if="workout">
             <div class="border-b pb-2">
                 <H2 class="pt-2">
-                    {{ formatDate(workout.data.startedAt, 'd. MMMM, HH:mm') }}
+                    {{ formatDate(workout.data.startedAt, 'D. MMMM, HH:mm') }}
                     -
                     {{ formatDate(workout.data.finishedAt, 'HH:mm') }}
                 </H2>

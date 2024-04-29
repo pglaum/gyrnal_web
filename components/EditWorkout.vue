@@ -337,8 +337,19 @@ const leaveRoute = ({ answer, path, }: {answer: boolean, path: string }) => {
     }
 }
 
+const handleBeforeUnload = (e) => {
+    console.log(e)
+    e.preventDefault()
+    e.returnValue = "Are you sure you want to close the tab?"
+}
+
 onMounted(() => {
     templateStore.init()
+    window.addEventListener('beforeunload', handleBeforeUnload)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('beforeunload', handleBeforeUnload)
 })
 
 onBeforeRouteLeave((e) => {

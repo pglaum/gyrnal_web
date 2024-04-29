@@ -3,7 +3,7 @@
         <Card class="transition-shadow hover:shadow-md">
             <CardHeader>
                 <CardTitle>
-                    {{ formatDate(workout.data.startedAt, 'd. MMMM, HH:mm') }}
+                    {{ formatDate(workout.data.startedAt, 'D. MMMM, HH:mm') }}
                 </CardTitle>
             </CardHeader>
             <CardContent>
