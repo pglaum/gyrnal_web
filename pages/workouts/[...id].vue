@@ -1,34 +1,41 @@
 <template>
     <div class="container my-24 grid max-w-3xl gap-8">
         <template v-if="workout">
-            <div class="flex flex-wrap items-center justify-between border-b pb-2">
+            <div class="border-b pb-2">
                 <H2 class="pt-2">
                     {{ formatDate(workout.data.startedAt, 'd. MMMM, HH:mm') }}
                     -
                     {{ formatDate(workout.data.finishedAt, 'HH:mm') }}
                 </H2>
+            </div>
 
-                <div class="flex flex-wrap gap-2">
-                    <Button
-                        as-child
-                        variant="outline"
+            <div class="flex flex-wrap gap-2">
+                <Button
+                    as-child
+                    variant="outline"
+                >
+                    <NuxtLink
+                        :to="`/workouts/edit/${route.params.id}`"
+                        class="flex items-center gap-2"
                     >
-                        <NuxtLink
-                            :to="`/workouts/edit/${route.params.id}`"
-                            class="flex items-center gap-2"
-                        >
-                            <Pencil class="size-4" />
-                            Edit
-                        </NuxtLink>
-                    </Button>
-                    <Button
-                        variant="destructive-outline"
-                        @click="dialogStore.showDialog('delete-workout')"
-                    >
-                        <Trash2 class="size-4" />
-                        Delete
-                    </Button>
-                </div>
+                        <Pencil class="size-4" />
+                        Edit
+                    </NuxtLink>
+                </Button>
+                <Button
+                    variant="outline"
+                    @click="dialogStore.showDialog('create-template', workout)"
+                >
+                    <Plus class="size-4" />
+                    Create template
+                </Button>
+                <Button
+                    variant="destructive-outline"
+                    @click="dialogStore.showDialog('delete-workout')"
+                >
+                    <Trash2 class="size-4" />
+                    Delete
+                </Button>
             </div>
 
             <div
@@ -59,6 +66,7 @@
             </div>
         </template>
 
+        <CreateTemplateDialog v-if="createTemplateDialogVisible" />
         <DeleteWorkoutDialog
             v-if="deleteWorkoutDialogVisible"
             @delete="removeWorkout"
@@ -68,7 +76,7 @@
 
 <script setup lang="ts">
 import { formatDate, } from '@vueuse/core'
-import { Dumbbell, Pencil, Trash2, } from 'lucide-vue-next'
+import { Dumbbell, Pencil, Plus, Trash2, } from 'lucide-vue-next'
 
 import { Badge, } from '~/components/ui/badge'
 import { deleteWorkout, getWorkout, } from '~/lib/api/workout'
@@ -77,6 +85,7 @@ const route = useRoute()
 const workout = ref()
 
 const dialogStore = useDialogStore()
+const createTemplateDialogVisible = dialogStore.isVisibleComputed('create-template')
 const deleteWorkoutDialogVisible = dialogStore.isVisibleComputed('delete-workout')
 
 onMounted(async () => {
