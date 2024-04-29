@@ -45,16 +45,23 @@
         <CardContent class="grid gap-4">
             <div
                 v-if="movement.performances && movement.performances.length > 0"
-                class="grid gap-4"
+                class="grid gap-2"
             >
-                <EditPerformance
+                <template
                     v-for="performance, pindex in movement.performances"
                     :key="pindex"
-                    :performance="performance"
-                    :index="index"
-                    :pindex="pindex"
-                    @remove="emit('removePerformance', {index, pindex})"
-                />
+                >
+                    <EditPerformance
+                        :performance="performance"
+                        :index="index"
+                        :pindex="pindex"
+                        @remove="emit('removePerformance', {index, pindex})"
+                    />
+                    <hr
+                        v-if="pindex < movement.performances.length - 1"
+                        class="mx-4"
+                    >
+                </template>
             </div>
 
             <div class="flex flex-wrap justify-between gap-4">

@@ -38,7 +38,7 @@
                 </slot>
             </div>
 
-            <DialogFooter class="p-6 pt-0">
+            <DialogFooter class="flex flex-wrap gap-4 p-6 pt-0">
                 <slot name="footer">
                     <Button
                         type="button"

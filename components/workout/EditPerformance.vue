@@ -1,6 +1,6 @@
 <template>
     <div class="grid gap-2">
-        <div class="flex items-end gap-2">
+        <div class="flex flex-wrap items-end gap-2 md:flex-nowrap">
             <Button
                 :variant="perf.load.bodyweight ? 'default' : 'outline'"
                 size="icon"
@@ -13,24 +13,28 @@
                 v-model="perf.load.weight"
                 type="number"
                 label="Weight"
+                class="max-w-20 md:max-w-full"
                 select-on-focus
             />
             <TextInput
                 v-model="perf.load.unit"
                 type="string"
                 label="Unit"
+                class="max-w-20 md:max-w-full"
                 select-on-focus
             />
             <TextInput
                 v-model="perf.reps"
                 type="number"
                 label="Reps"
+                class="max-w-20 md:max-w-full"
                 select-on-focus
             />
             <TextInput
                 v-model="perf.fails"
                 type="number"
                 label="Fails"
+                class="max-w-20 md:max-w-full"
                 select-on-focus
             />
             <Button
