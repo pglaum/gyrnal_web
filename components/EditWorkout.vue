@@ -4,21 +4,30 @@
             <H2 class="pt-2">
                 {{ gyrnalWorkout && gyrnalWorkout.id ? 'Edit Workout' : 'New Workout' }}
             </H2>
-            <Button
-                variant="default"
-                :disabled="loading"
-                @click="save"
-            >
-                <Loader2
-                    v-if="loading"
-                    class="size-4 animate-spin"
-                />
-                <Save
-                    v-else
-                    class="size-4"
-                />
-                Save
-            </Button>
+            <div class="flex flex-wrap gap-2">
+                <Button
+                    variant="outline"
+                    @click="dialogStore.showDialog('assign-template')"
+                >
+                    <NotepadTextDashed class="size-4" />
+                    Load template
+                </Button>
+                <Button
+                    variant="default"
+                    :disabled="loading"
+                    @click="save"
+                >
+                    <Loader2
+                        v-if="loading"
+                        class="size-4 animate-spin"
+                    />
+                    <Save
+                        v-else
+                        class="size-4"
+                    />
+                    Save
+                </Button>
+            </div>
         </div>
 
         <div
@@ -128,6 +137,12 @@
         </div>
     </div>
 
+    <AssignTemplateDialog
+        v-if="assignTemplateDialogVisible"
+        hide-none
+        @assign="assign"
+    />
+
     <AddMovementDialog
         v-if="addMovementDialogVisible"
         @add="addMovement"
@@ -158,7 +173,7 @@
 
 <script setup lang="ts">
 import { useNow, watchDeep, } from '@vueuse/core'
-import { Loader2, Plus, Save, Terminal, X, } from 'lucide-vue-next'
+import { Loader2, NotepadTextDashed, Plus, Save, Terminal, X, } from 'lucide-vue-next'
 
 import EditMovementNotesDialog from '@/components/dialog/EditMovementNotesDialog.vue'
 import EditPerformanceNotesDialog from '@/components/dialog/EditPerformanceNotesDialog.vue'
@@ -191,8 +206,12 @@ const lastPerformance = ref(new Date())
 const loading = ref(false)
 const showTimer = ref(false)
 
+const templateStore = useTemplateStore()
+const { templates, } = storeToRefs(templateStore)
+
 const dialogStore = useDialogStore()
 const addMovementDialogVisible = dialogStore.isVisibleComputed('add-movement')
+const assignTemplateDialogVisible = dialogStore.isVisibleComputed('assign-template')
 const editMovementDialogVisible = dialogStore.isVisibleComputed('edit-movement')
 const editMovementNotesDialogVisible = dialogStore.isVisibleComputed('edit-movement-notes')
 const deleteMovementDialogVisible = dialogStore.isVisibleComputed('delete-movement')
@@ -295,12 +314,32 @@ const save = async () => {
     }
 }
 
+const assign = (templateId: string) => {
+    if (templateId) {
+        const template = templates.value.find((template) => template.id == templateId)
+        if (template) {
+            template.movements.forEach((mvmnt) => {
+                addMovement(mvmnt)
+            })
+
+            if (!workout.value.metadata) {
+                workout.value.metadata = {}
+            }
+            workout.value.metadata.template = templateId
+        }
+    }
+}
+
 const leaveRoute = ({ answer, path, }: {answer: boolean, path: string }) => {
     allowLeave.value = answer
     if (allowLeave.value) {
         router.push(path)
     }
 }
+
+onMounted(() => {
+    templateStore.init()
+})
 
 onBeforeRouteLeave((e) => {
     if (!allowLeave.value && hasChanges.value) {

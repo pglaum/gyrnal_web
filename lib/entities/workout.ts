@@ -4,6 +4,7 @@ import { MovementSchema, } from "@/lib/entities/movement"
 
 export const WorkoutMetadataSchema = z.object({
     workoutType: z.string().nullish(),
+    template: z.string().nullish(),
 })
 
 export type WorkoutMetadata = z.infer<typeof WorkoutMetadataSchema>

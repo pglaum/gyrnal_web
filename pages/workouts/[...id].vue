@@ -30,6 +30,13 @@
                     Create template
                 </Button>
                 <Button
+                    variant="outline"
+                    @click="dialogStore.showDialog('assign-template', workout)"
+                >
+                    <NotepadTextDashed class="size-4" />
+                    Assign template
+                </Button>
+                <Button
                     variant="destructive-outline"
                     @click="dialogStore.showDialog('delete-workout')"
                 >
@@ -49,6 +56,13 @@
                     <Dumbbell class="size-4" />
                     {{ workout.data.metadata.workoutType }}
                 </Badge>
+                <Badge
+                    v-if="workout.data.metadata.template"
+                    class="py-1"
+                >
+                    <NotepadTextDashed class="size-4" />
+                    {{ theTemplate?.title }}
+                </Badge>
             </div>
 
             <div v-if="workout.data.notes">
@@ -67,6 +81,10 @@
         </template>
 
         <CreateTemplateDialog v-if="createTemplateDialogVisible" />
+        <AssignTemplateDialog
+            v-if="assignTemplateDialogVisible"
+            @assign="assign"
+        />
         <DeleteWorkoutDialog
             v-if="deleteWorkoutDialogVisible"
             @delete="removeWorkout"
@@ -76,23 +94,43 @@
 
 <script setup lang="ts">
 import { formatDate, } from '@vueuse/core'
-import { Dumbbell, Pencil, Plus, Trash2, } from 'lucide-vue-next'
+import { Dumbbell, NotepadTextDashed, Pencil, Plus, Trash2, } from 'lucide-vue-next'
 
 import { Badge, } from '~/components/ui/badge'
-import { deleteWorkout, getWorkout, } from '~/lib/api/workout'
+import { deleteWorkout, getWorkout, updateWorkout, } from '~/lib/api/workout'
+import { useTemplateStore, } from '~/stores/templateStore'
 
 const route = useRoute()
 const workout = ref()
 
+const templateStore = useTemplateStore()
+const { templates, } = storeToRefs(templateStore)
+
 const dialogStore = useDialogStore()
+const assignTemplateDialogVisible = dialogStore.isVisibleComputed('assign-template')
 const createTemplateDialogVisible = dialogStore.isVisibleComputed('create-template')
 const deleteWorkoutDialogVisible = dialogStore.isVisibleComputed('delete-workout')
 
 onMounted(async () => {
+    templateStore.init()
     workout.value = await getWorkout(route.params.id)
 })
 
 const removeWorkout = () => {
     deleteWorkout(route.params.id)
+}
+
+const theTemplate = computed(() => templates.value.find((template) => template.id == workout.value.data.metadata.template))
+
+const assign = (template: string|null) => {
+    if (!workout.value.data.metadata) {
+        workout.value.data.metadata = {}
+    }
+    if (template){
+        workout.value.data.metadata['template'] = template
+    } else {
+        delete workout.value.data.metadata.template
+    }
+    updateWorkout(workout.value)
 }
 </script>
