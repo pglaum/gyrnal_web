@@ -314,7 +314,7 @@ const save = async () => {
     }
 }
 
-const assign = (templateId: string) => {
+const assign = (templateId: string | null) => {
     if (templateId) {
         const template = templates.value.find((template) => template.id == templateId)
         if (template) {

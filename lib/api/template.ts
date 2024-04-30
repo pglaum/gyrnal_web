@@ -51,7 +51,7 @@ export const updateTemplate = async (template: Template) => {
         })
 
         if (data && data.id) {
-            router.push(`/template/${data.id}`)
+            router.push(`/templates/${data.id}`)
         } else {
             router.push('/')
         }
