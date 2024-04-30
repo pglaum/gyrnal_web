@@ -12,6 +12,7 @@ env:
 jobs:
   ghcr:
     runs-on: ubuntu-latest
+    environment: default
     permissions:
       contents: read
       packages: write
@@ -41,9 +42,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            SUPABASE_URL=${{ secrets.SUPABASE_URL }}
-            SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
-            SUPABASE_SERVICE_KEY=${{ secrets.SUPABASE_SERVICE_KEY }}
+            SUPABASE_URL=${{ vars.SUPABASE_URL }}
+            SUPABASE_KEY=${{ vars.SUPABASE_KEY }}
 
       - name: Portainer WebHook
         run: curl -X POST "$PORTAINER_WEBHOOK"

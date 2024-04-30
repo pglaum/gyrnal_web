@@ -31,9 +31,6 @@ export default defineNuxtConfig({
     pinia: {
         storesDirs: [ './stores/**', ],
     },
-    routeRules: {
-        '**': { prerender: false, },
-    },
     shadcn: {
         prefix: '',
         componentDir: './components/ui',
