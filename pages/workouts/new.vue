@@ -1,5 +1,10 @@
 <template>
     <div class="container my-24 max-w-3xl">
+        <Breadcrumbs
+            :breadcrumbs="[
+                ['New workout']
+            ]"
+        />
         <EditWorkout v-model="workout" />
     </div>
 </template>

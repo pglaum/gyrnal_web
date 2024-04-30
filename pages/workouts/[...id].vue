@@ -1,11 +1,14 @@
 <template>
     <div class="container my-24 grid max-w-3xl gap-8">
+        <Breadcrumbs
+            :breadcrumbs="[
+                [ `Workout on ${title}`]
+            ]"
+        />
         <template v-if="workout">
             <div class="border-b pb-2">
                 <H2 class="pt-2">
-                    {{ formatDate(workout.data.startedAt, 'D. MMMM, HH:mm') }}
-                    -
-                    {{ formatDate(workout.data.finishedAt, 'HH:mm') }}
+                    {{ title }}
                 </H2>
             </div>
 
@@ -31,7 +34,6 @@
                     Create template
                 </Button>
                 <Button
-                    v-if="!workout.data.metadata.template"
                     variant="outline"
                     @click="dialogStore.showDialog('assign-template', workout)"
                 >
@@ -123,6 +125,12 @@ const removeWorkout = () => {
 }
 
 const theTemplate = computed(() => templates.value.find((template) => template.id == workout.value.data.metadata.template))
+const title = computed(() => {
+    if (!workout.value?.data?.startedAt) {
+        return ''
+    }
+    return `${formatDate(workout.value?.data?.startedAt, 'D. MMMM, HH:mm')} - ${formatDate(workout.value?.data?.finishedAt, 'HH:mm')}`
+})
 
 const assign = (template: string|null) => {
     if (!workout.value.data.metadata) {

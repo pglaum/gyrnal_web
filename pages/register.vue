@@ -50,6 +50,7 @@ import { useToast, } from '~/components/ui/toast'
 
 const router = useRouter()
 const supabase = useSupabaseClient()
+const user = useSupabaseUser()
 const { toast, } = useToast()
 
 const email = ref('')
@@ -77,4 +78,10 @@ const signUp = async () => {
         router.push('/login')
     }
 }
+
+onMounted(() => {
+    if (user.value) {
+        router.replace('/')
+    }
+})
 </script>

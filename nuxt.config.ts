@@ -19,6 +19,9 @@ export default defineNuxtConfig({
             pathPrefix: false,
         },
     ],
+    experimental: {
+        payloadExtraction: false,
+    },
     modules: [
         '@nuxtjs/supabase',
         '@nuxtjs/tailwindcss',
@@ -27,6 +30,9 @@ export default defineNuxtConfig({
     ],
     pinia: {
         storesDirs: [ './stores/**', ],
+    },
+    routeRules: {
+        '**': { prerender: false, },
     },
     shadcn: {
         prefix: '',
