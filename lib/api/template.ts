@@ -83,7 +83,11 @@ export const getTemplates = async () => {
     const user = useSupabaseUser()
     const { toast, } = useToast()
 
-    const { data, error, } = await supabase.from('template').select().eq('userid', user.value.id)
+    const { data, error, } = await supabase
+        .from('template')
+        .select()
+        .eq('userid', user.value.id)
+        .order('title')
 
     if (error) {
         toast({
@@ -111,6 +115,6 @@ export const deleteTemplate = async (id: string) => {
             variant: 'destructive',
         })
     } else {
-        router.push('/')
+        router.push('/templates')
     }
 }

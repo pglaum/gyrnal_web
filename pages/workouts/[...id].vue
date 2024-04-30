@@ -23,6 +23,7 @@
                     </NuxtLink>
                 </Button>
                 <Button
+                    v-if="!workout.data.metadata.template"
                     variant="outline"
                     @click="dialogStore.showDialog('create-template', workout)"
                 >
@@ -30,6 +31,7 @@
                     Create template
                 </Button>
                 <Button
+                    v-if="!workout.data.metadata.template"
                     variant="outline"
                     @click="dialogStore.showDialog('assign-template', workout)"
                 >

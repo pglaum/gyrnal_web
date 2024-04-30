@@ -82,7 +82,11 @@ export const getWorkouts = async () => {
     const user = useSupabaseUser()
     const { toast, } = useToast()
 
-    const { data, error, } = await supabase.from('gyrnal_workout').select().eq('userid', user.value.id)
+    const { data, error, } = await supabase
+        .from('gyrnal_workout')
+        .select()
+        .eq('userid', user.value.id)
+        .order('data->>startedAt', { ascending: false, })
 
     if (error) {
         toast({

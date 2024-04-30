@@ -19,6 +19,13 @@
                             <Dumbbell class="size-4" />
                             {{ workout.data.metadata.workoutType }}
                         </Badge>
+                        <Badge
+                            v-if="thisTemplate"
+                            class="py-1"
+                        >
+                            <NotepadTextDashed class="size-4" />
+                            {{ thisTemplate.title }}
+                        </Badge>
                     </div>
 
                     <div class="flex items-end justify-end gap-2">
@@ -40,11 +47,27 @@
 
 <script setup lang="ts">
 import { formatDate, } from '@vueuse/core'
-import { ArrowRight, Dumbbell, } from 'lucide-vue-next'
+import { ArrowRight, Dumbbell, NotepadTextDashed, } from 'lucide-vue-next'
 
 import { type GyrnalWorkout, } from '~/lib/entities/gyrnal_workout'
+import type { Template, } from '~/lib/entities/template'
 
-defineProps<{
+const props = defineProps<{
     workout: GyrnalWorkout
 }>()
+const { workout, } = toRefs(props)
+
+const templateStore = useTemplateStore()
+const { templates, } = storeToRefs(templateStore)
+
+const thisTemplate = computed(() => {
+    if (!workout.value.data.metadata.template) {
+        return null
+    }
+    return templates.value.find((template: Template) => template.id == workout.value.data.metadata.template)
+})
+
+onMounted(() => {
+    templateStore.init()
+})
 </script>

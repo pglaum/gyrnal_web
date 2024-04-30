@@ -10,6 +10,11 @@
                     label="Title"
                 />
 
+                <TextInput
+                    v-model="template.workoutType"
+                    label="Workout Type"
+                />
+
                 <Card>
                     <CardHeader>
                         <CardTitle class="text-xl font-medium">
@@ -48,7 +53,7 @@
                                 </div>
                                 <TextInput
                                     v-model="template.movements[index]"
-                                    :label="`Movement ${index}`"
+                                    :label="`Movement ${index + 1}`"
                                 />
                                 <Button
                                     variant="destructive-outline"
@@ -97,6 +102,7 @@ import { type Template, TemplateSchema, } from '~/lib/entities/template'
 const user = useSupabaseUser()
 const dialogStore = useDialogStore()
 const { dialogData: workout, }: {dialogData: Ref<GyrnalWorkout>} = storeToRefs(dialogStore)
+const templateStore = useTemplateStore()
 
 const dragging = ref(false)
 const template = ref<Template>(TemplateSchema.parse({}))
@@ -106,16 +112,22 @@ const create = () => {
     template.value.userid = user.value?.id || null
     template.value = TemplateSchema.parse(template.value)
     insertTemplate(template.value)
+    templateStore.refresh()
     dialogStore.closeDialog()
 }
 
 onMounted(() => {
-    if (workout.value && workout.value.data?.movements) {
-        const mvmnts: string[] = []
-        workout.value.data.movements.forEach((movement: Movement) => {
-            mvmnts.push(movement.name)
-        })
-        template.value.movements = mvmnts
+    if (workout.value) {
+        if (workout.value.data?.movements) {
+            const mvmnts: string[] = []
+            workout.value.data.movements.forEach((movement: Movement) => {
+                mvmnts.push(movement.name)
+            })
+            template.value.movements = mvmnts
+        }
+        if (workout.value.data?.metadata?.workoutType) {
+            template.value.workoutType = workout.value.data.metadata.workoutType
+        }
     }
 })
 </script>

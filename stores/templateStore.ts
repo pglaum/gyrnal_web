@@ -4,6 +4,7 @@ import type { Template, } from "~/lib/entities/template"
 export const useTemplateStore = defineStore('template', {
     state () {
         return {
+            isLoading: false,
             templates: [] as Template[],
         }
     },
@@ -16,8 +17,13 @@ export const useTemplateStore = defineStore('template', {
             }
         },
         async refresh () {
+            if (this.isLoading) {
+                return
+            }
+            this.isLoading = true
             const templates = await getTemplates()
             this.templates = templates
+            this.isLoading = false
         },
     },
 })

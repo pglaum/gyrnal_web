@@ -19,6 +19,15 @@
                 />
                 Save
             </Button>
+            <Button
+                variant="destructive"
+                @click="dialogStore.showDialog('delete-template')"
+            >
+                <Trash2
+                    class="size-4"
+                />
+                Delete
+            </Button>
         </div>
     </div>
 
@@ -80,6 +89,11 @@
             <Plus class="size-4" />
             Add movement
         </Button>
+
+        <DeleteWorkoutDialog
+            v-if="isDeleteDialogVisible"
+            @delete="removeTemplate"
+        />
     </div>
 </template>
 
@@ -87,7 +101,7 @@
 import { GripVertical, Loader2, Plus, Save, Trash2, } from 'lucide-vue-next'
 
 import { useToast, } from '~/components/ui/toast'
-import { insertTemplate, updateTemplate, } from '~/lib/api/template'
+import { deleteTemplate, insertTemplate, updateTemplate, } from '~/lib/api/template'
 import type { Template, } from '~/lib/entities/template'
 
 const props = defineProps<{
@@ -97,6 +111,9 @@ const { template, } = toRefs(props)
 
 const user = useSupabaseUser()
 const { toast, } = useToast()
+
+const dialogStore = useDialogStore()
+const isDeleteDialogVisible = dialogStore.isVisibleComputed('delete-template')
 const templateStore = useTemplateStore()
 
 const dragging = ref(false)
@@ -122,5 +139,10 @@ const save = async () => {
     } finally {
         loading.value = false
     }
+}
+
+const removeTemplate = () => {
+    deleteTemplate(template.value.id)
+    templateStore.refresh()
 }
 </script>

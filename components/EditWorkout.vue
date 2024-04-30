@@ -65,31 +65,34 @@
         >
             <H3>Movements</H3>
 
-            <draggable
-                :animation="200"
-                :component-data="{
-                    type: 'transition-group',
-                    name: !dragging ? 'flip-list' : null,
-                }"
-                group="movements"
-                ghost-class="bg-muted"
-                handle=".handle"
-                tag="transition-group"
-                :list="workout.movements"
-                @start="dragging = true"
-                @end="dragging = false"
-            >
-                <EditMovement
-                    v-for="movement, index in workout.movements"
-                    :key="index"
-                    class="my-4"
-                    :movement="movement"
-                    :index="index"
-                    @add-performance="addPerformance"
-                    @remove-performance="removePerformance"
-                    @try-remove="tryRemoveMovement"
-                />
-            </draggable>
+            <ClientOnly>
+                <draggable
+                    v-if="workout.movements && workout.movements.length > 0"
+                    :animation="200"
+                    :component-data="{
+                        type: 'transition-group',
+                        name: !dragging ? 'flip-list' : null,
+                    }"
+                    group="movements"
+                    ghost-class="bg-muted"
+                    handle=".handle"
+                    tag="transition-group"
+                    :list="workout.movements"
+                    @start="dragging = true"
+                    @end="dragging = false"
+                >
+                    <EditMovement
+                        v-for="movement, index in workout.movements"
+                        :key="index"
+                        class="my-4"
+                        :movement="movement"
+                        :index="index"
+                        @add-performance="addPerformance"
+                        @remove-performance="removePerformance"
+                        @try-remove="tryRemoveMovement"
+                    />
+                </draggable>
+            </ClientOnly>
 
             <div class="flex gap-4">
                 <Button @click="dialogStore.showDialog('add-movement')">
@@ -181,7 +184,7 @@ import { useToast, } from '@/components/ui/toast'
 import EditMovement from '@/components/workout/EditMovement.vue'
 import { insertWorkout, updateWorkout, } from '~/lib/api/workout'
 import { type GyrnalWorkout, GyrnalWorkoutSchema, } from '~/lib/entities/gyrnal_workout'
-import { MovementSchema, } from '~/lib/entities/movement'
+import { type Movement, MovementSchema,  } from '~/lib/entities/movement'
 import { PerformanceSchema, } from '~/lib/entities/performance'
 import { type Workout, WorkoutSchema, } from '~/lib/entities/workout'
 
@@ -319,13 +322,19 @@ const assign = (templateId: string | null) => {
         const template = templates.value.find((template) => template.id == templateId)
         if (template) {
             template.movements.forEach((mvmnt) => {
-                addMovement(mvmnt)
+                const hasMovement = workout.value.movements.find((movement: Movement) => movement.name == mvmnt)
+                if (!hasMovement) {
+                    addMovement(mvmnt)
+                }
             })
 
             if (!workout.value.metadata) {
                 workout.value.metadata = {}
             }
             workout.value.metadata.template = templateId
+            if (template.workoutType) {
+                workout.value.metadata.workoutType = template.workoutType
+            }
         }
     }
 }
@@ -338,7 +347,6 @@ const leaveRoute = ({ answer, path, }: {answer: boolean, path: string }) => {
 }
 
 const handleBeforeUnload = (e) => {
-    console.log(e)
     e.preventDefault()
     e.returnValue = "Are you sure you want to close the tab?"
 }
