@@ -1,5 +1,6 @@
 <template>
     <div class="container my-24 grid max-w-3xl gap-8">
+        <Title>Template {{ template?.title ? `"${template.title}"` : '' }}</Title>
         <Breadcrumbs
             :breadcrumbs="[
                 ['Templates', '/templates'],

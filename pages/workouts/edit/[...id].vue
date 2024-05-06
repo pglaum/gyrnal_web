@@ -1,5 +1,6 @@
 <template>
     <div class="container my-24 grid max-w-3xl gap-8">
+        <Title>Edit workout {{ title }}</Title>
         <Breadcrumbs
             :breadcrumbs="[
                 [`Workout on ${title}`, `/workouts/${workout?.id}`],

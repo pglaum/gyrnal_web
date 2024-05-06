@@ -20,4 +20,8 @@ const template = ref()
 onMounted(async () => {
     template.value = TemplateSchema.parse({})
 })
+
+useHead({
+    title: 'New template',
+})
 </script>

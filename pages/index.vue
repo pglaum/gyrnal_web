@@ -48,4 +48,8 @@ const workouts = ref()
 onMounted(async () => {
     workouts.value = await getWorkouts()
 })
+
+useHead({
+    title: 'Gyrnal',
+})
 </script>

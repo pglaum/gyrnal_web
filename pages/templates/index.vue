@@ -36,5 +36,9 @@ const { templates, }= storeToRefs(templateStore)
 onMounted(async () => {
     templateStore.init()
 })
+
+useHead({
+    title: 'Templates',
+})
 </script>
 

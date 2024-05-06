@@ -83,4 +83,8 @@ onMounted(() => {
         router.replace('/')
     }
 })
+
+useHead({
+    title: 'Login to Gyrnal',
+})
 </script>

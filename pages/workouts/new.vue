@@ -17,4 +17,8 @@ const workout = ref()
 onMounted(() => {
     workout.value = WorkoutSchema.parse({ startedAt: new Date(), finishedAt: new Date(), })
 })
+
+useHead({
+    title: 'New workout',
+})
 </script>
