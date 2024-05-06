@@ -6,6 +6,17 @@
     </div>
 </template>
 
+<script setup lang="ts">
+useSeoMeta({
+    title: 'Gyrnal',
+    ogTitle: 'Gyrnal',
+    description: 'Empower your workouts, chronicle your success!',
+    ogDescription: 'Empower your workouts, chronicle your success!',
+    ogImage: '/gyrnal_logo.png',
+    twitterCard: 'summary_large_image',
+})
+</script>
+
 <style>
 .page-enter-active,
 .page-leave-active {

@@ -5,6 +5,15 @@ export default defineNuxtConfig({
             name: 'page',
             mode: 'out-in',
         },
+        head: {
+            link: [
+                {
+                    rel: 'icon',
+                    type: 'image/png',
+                    href: '/gyrnal_logo.png',
+                },
+            ],
+        },
     },
     build: {
         postcss: {

@@ -11,7 +11,10 @@
                     uppercase
                     text-muted-foreground"
             >
-                <NotepadText class="size-4" />
+                <img
+                    class="size-6 rounded"
+                    src="/gyrnal_logo.png"
+                >
                 Gyrnal
             </NuxtLink>
             <div class="flex gap-4">
@@ -29,7 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import { NotepadText, } from 'lucide-vue-next'
 
 import { toast, } from '~/components/ui/toast'
 
