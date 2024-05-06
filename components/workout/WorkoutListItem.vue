@@ -29,7 +29,10 @@
                     </div>
 
                     <div class="flex items-end justify-end gap-2">
-                        <Button as-child>
+                        <Button
+                            as-child
+                            variant="outline"
+                        >
                             <NuxtLink
                                 :to="`/workouts/${workout.id}`"
                                 class="inline-flex items-center gap-2"
