@@ -1,0 +1,12 @@
+:443 {
+	root * /nuxt
+
+	file_server
+	tls internal {
+		on_demand
+	}
+
+	log {
+		output file /var/log/access.log
+	}
+}
