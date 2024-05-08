@@ -48,7 +48,6 @@
 <script setup lang="ts">
 import { useToast, } from '~/components/ui/toast'
 
-const router = useRouter()
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const { toast, } = useToast()
@@ -74,13 +73,12 @@ const signIn = async () => {
             title: 'Logged in',
             variant: 'success',
         })
-        router.push('/')
     }
 }
 
-onMounted(() => {
+watchEffect(() => {
     if (user.value) {
-        router.replace('/')
+        navigateTo('/confirm')
     }
 })
 
