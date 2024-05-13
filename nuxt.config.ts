@@ -45,6 +45,11 @@ export default defineNuxtConfig({
         componentDir: './components/ui',
     },
     supabase: {
+        clientOptions: {
+            db: {
+                schema: process.env.NUXT_PUBLIC_SCHEMA ?? 'gyrnal',
+            },
+        },
         redirectOptions: {
             login: '/login',
             callback: '/confirm',
