@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   gyrnal_web:
     image: ghcr.io/pglaum/gyrnal_web:main
